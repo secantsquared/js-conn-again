@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const server = express()
-//cors
+
 server.use(cors())
 
 server.get('/', async (req, res, next) => {
