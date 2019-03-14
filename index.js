@@ -6,7 +6,7 @@ server.use(cors())
 
 server.get('/', async (req, res, next) => {
   if (!req.query.username) {
-    res.status(404).json({message: "BAD REQUEST"})
+    res.status(401).json({message: "Unauthorized"})
   }
   const py = await require('child_process').spawn('python', [
     './app.py',
@@ -21,6 +21,7 @@ server.get('/', async (req, res, next) => {
       'data',
       data => {
         console.log(`stderr: ${data}`)
+        res.status(500).json({message: "An error has occurred."})
       },
       e
     )
