@@ -3,7 +3,7 @@ const cors = require('cors')
 const server = express()
 
 server.use(cors())
-
+//cors
 server.get('/', async (req, res, next) => {
   if (!req.query.username) {
     res.status(401).json({ message: 'Unauthorized' })
