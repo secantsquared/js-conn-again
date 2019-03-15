@@ -1,9 +1,35 @@
 const express = require('express')
 const cors = require('cors')
 const server = express()
+const psTree = require('ps-tree')
 
 server.use(cors())
-//cors
+var kill = function(pid, signal, callback) {
+  signal = signal || 'SIGKILL'
+  callback = callback || function() {}
+  var killTree = true
+  if (killTree) {
+    psTree(pid, function(err, children) {
+      ;[pid]
+        .concat(
+          children.map(function(p) {
+            return p.PID
+          })
+        )
+        .forEach(function(tpid) {
+          try {
+            process.kill(tpid, signal)
+          } catch (ex) {}
+        })
+      callback()
+    })
+  } else {
+    try {
+      process.kill(pid, signal)
+    } catch (ex) {}
+    callback()
+  }
+}
 server.get('/', async (req, res, next) => {
   if (!req.query.username) {
     res.status(401).json({ message: 'Unauthorized' })
@@ -31,6 +57,7 @@ server.get('/', async (req, res, next) => {
     )
   } finally {
     py.on('close', (code, signal) => {
+      kill(py.pid)
       console.log(`child process exited with code ${code} and signal ${signal}`)
     })
   }
