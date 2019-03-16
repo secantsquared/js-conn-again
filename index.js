@@ -45,7 +45,7 @@ server.get('/', async (req, res, next) => {
   ])
   try {
     py.stdout.on('data', data => {
-      res.json(JSON.parse(data))
+      res.end(data)
     })
   } catch (e) {
     py.stderr.on(
@@ -63,4 +63,4 @@ server.get('/', async (req, res, next) => {
     })
   }
 })
-server.listen(process.env.PORT || 3000, console.log('up and running'))
+server.listen(process.env.PORT || 4000, console.log('up and running'))
